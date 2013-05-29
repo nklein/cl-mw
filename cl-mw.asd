@@ -43,5 +43,9 @@
                                                          "packet-buffer"))
                                      (:file "file-utils"
                                             :depends-on ("package"))
-                                     (:file "impl"
+                                     #+sbcl
+                                     (:file "impl-sbcl"
+                                            :depends-on ("mw" "file-utils"))
+                                     #+ccl
+                                     (:file "impl-ccl"
                                             :depends-on ("mw" "file-utils"))))))

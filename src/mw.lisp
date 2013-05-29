@@ -389,7 +389,10 @@
 ;;
 ;; WARNING: Unfortunately, the default keyword argument here is
 ;; required to be here instead of in the implementation specific lisp file.
-(defun mw-initialize (argv &key (system-argv sb-ext:*posix-argv*))
+(defun mw-initialize (argv
+                      &key (system-argv #+sbcl sb-ext:*posix-argv*
+                                        #+ccl
+                                        ccl:*command-line-argument-list*))
   ;; Neede since a macro is producing references to *debug-stream*
   (declare (special *debug-stream*))
   ;; fill the conf table by parsing the arguments.
@@ -1592,7 +1595,8 @@
     (when (member "--mw-version-string" argv :test #'string-equal)
       ;; This will exit.
       (format t "CL-MW: Version ~A~%" (mw-version-string))
-      (sb-ext:quit :unix-status 1))
+      #+sbcl (sb-ext:quit :unix-status 1)
+      #+ccl (ccl:quit 1))
 
     ;; This function does the work of setting the config options and
     ;; building the new argv list which only contains non-mw stuff in
@@ -1878,8 +1882,5 @@
 ")
 
   (when exit
-    (sb-ext:quit :unix-status 1)))
-
-
-
-
+    #+sbcl (sb-ext:quit :unix-status 1)
+    #+ccl (ccl:quit 1)))
