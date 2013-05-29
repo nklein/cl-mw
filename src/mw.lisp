@@ -50,6 +50,16 @@
 (defun length-queue (q)
   (length (car q)))
 
+;; Compatibility function to quit with a given exit code
+(defun quit-lisp (unix-exit-code)
+  #+sbcl (sb-ext:quit :unix-status unix-exit-code)
+  #+ccl (ccl:quit unix-exit-code))
+
+;; Compatibility function to get the list of command-line arguments
+(defun get-command-line-arg-list ()
+  #+sbcl sb-ext:*posix-argv*
+  #+ccl ccl:*command-line-argument-list*)
+
 ;; Store open connection information into the open connections db
 ;; XXX figure out why equalp doesn't work with the key `(,who ,port)
 (defun save-open-connection (who port client)
@@ -390,9 +400,7 @@
 ;; WARNING: Unfortunately, the default keyword argument here is
 ;; required to be here instead of in the implementation specific lisp file.
 (defun mw-initialize (argv
-                      &key (system-argv #+sbcl sb-ext:*posix-argv*
-                                        #+ccl
-                                        ccl:*command-line-argument-list*))
+                      &key (system-argv (get-command-line-arg-list)))
   ;; Neede since a macro is producing references to *debug-stream*
   (declare (special *debug-stream*))
   ;; fill the conf table by parsing the arguments.
@@ -1595,8 +1603,7 @@
     (when (member "--mw-version-string" argv :test #'string-equal)
       ;; This will exit.
       (format t "CL-MW: Version ~A~%" (mw-version-string))
-      #+sbcl (sb-ext:quit :unix-status 1)
-      #+ccl (ccl:quit 1))
+      (quit-lisp 1))
 
     ;; This function does the work of setting the config options and
     ;; building the new argv list which only contains non-mw stuff in
@@ -1882,5 +1889,4 @@
 ")
 
   (when exit
-    #+sbcl (sb-ext:quit :unix-status 1)
-    #+ccl (ccl:quit 1)))
+    (quit-lisp 1)))
