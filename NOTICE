@@ -6,9 +6,12 @@ accordance with the Apache Version 2.0 License.
 You can find help with this library at comp.lang.lisp where I often reside.
 
 Various contributions have been made by:
-Mick Beaver  (mick@cs.wisc.edu)
-Alan De Smet (adesmet@cs.wisc.edu)
-Greg Thain   (gthain@cs.wisc.edu)
+Mick Beaver   (mick@cs.wisc.edu)
+Alan De Smet  (adesmet@cs.wisc.edu)
+Greg Thain    (gthain@cs.wisc.edu)
+
+The port to Clozure Common Lisp (ccl) was performed by:
+Patrick Stein (pat@nklein.com)
 
 Other codes:
 Portions of the small queue implementation used in cl-mw 
