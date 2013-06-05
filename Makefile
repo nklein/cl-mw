@@ -1,11 +1,20 @@
 # Change this to be however you'd like to invoke your sbcl.
+# TODO This lisp selection method needs to be a little more intelligent.
+
+LISP_FAST_FAIL = sbcl --disable-debugger
 LISP = sbcl
+
+# LISP_FAST_FAIL = ccl --batch
+# LISP = ccl
+
 
 
 RELEASE_TAG = HEAD
 LIB_NAME = cl-mw
 APPEND = tee -a
 RLOG = release.log
+
+MAKE_CMD = make LISP="$(LISP)" LISP_FAST_FAIL="$(LISP_FAST_FAIL)"
 
 # Do not ever make this nothing or a dot character!
 RDIR_PREFIX = release_dir-
@@ -30,22 +39,22 @@ docs:
 	(cd doc && make clean && make all)
 
 examples/with-task-policy/with-task-policy:
-	(cd examples/with-task-policy && make LISP=$(LISP))
+	(cd examples/with-task-policy && $(MAKE_CMD))
 
 examples/hello-world/hello-world:
-	(cd examples/hello-world && make LISP=$(LISP))
+	(cd examples/hello-world && $(MAKE_CMD))
 
 examples/ping/ping:
-	(cd examples/ping && make LISP=$(LISP))
+	(cd examples/ping && $(MAKE_CMD))
 
 examples/monte-carlo-pi/monte-carlo-pi:
-	(cd examples/monte-carlo-pi && make LISP=$(LISP))
+	(cd examples/monte-carlo-pi && $(MAKE_CMD))
 
 examples/higher-order/higher-order:
-	(cd examples/higher-order && make LISP=$(LISP))
+	(cd examples/higher-order && $(MAKE_CMD))
 
 examples/argument-processing/argument-processing:
-	(cd examples/argument-processing && make LISP=$(LISP))
+	(cd examples/argument-processing && $(MAKE_CMD))
 
 # The documentation pages are generated from the actual release tag.
 release: ensure-release-tag-ok

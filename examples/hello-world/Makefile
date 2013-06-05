@@ -1,4 +1,5 @@
 
+LISP_FAST_FAIL = sbcl --disable-debugger
 LISP = sbcl
 
 all: exec
@@ -8,7 +9,7 @@ debug: hello-world.dbg
 exec: hello-world
 
 hello-world: hello-world.lisp package.lisp
-	echo "(require :cl-mw.examples.hello-world) (use-package :cl-mw.examples.hello-world) (mw-dump-exec :exec-name \"./hello-world\")" | $(LISP) --disable-debugger
+	echo "(require :cl-mw.examples.hello-world) (use-package :cl-mw.examples.hello-world) (mw-dump-exec :exec-name \"./hello-world\")" | $(LISP_FAST_FAIL)
 
 hello-world.dbg: hello-world.lisp package.lisp
 	echo "(require :cl-mw.examples.hello-world) (use-package :cl-mw.examples.hello-world) (mw-dump-exec :exec-name \"./hello-world.dbg\")" | $(LISP)

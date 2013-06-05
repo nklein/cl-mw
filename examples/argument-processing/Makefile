@@ -1,4 +1,5 @@
 
+LISP_FAST_FAIL = sbcl --disable-debugger
 LISP = sbcl
 
 all: exec
@@ -8,7 +9,7 @@ debug: argument-processing.dbg
 exec: argument-processing
 
 argument-processing: argument-processing.lisp package.lisp
-	echo "(require :cl-mw.examples.argument-processing) (use-package :cl-mw.examples.argument-processing) (mw-dump-exec :exec-name \"./argument-processing\")" | $(LISP) --disable-debugger
+	echo "(require :cl-mw.examples.argument-processing) (use-package :cl-mw.examples.argument-processing) (mw-dump-exec :exec-name \"./argument-processing\")" | $(LISP_FAST_FAIL)
 
 argument-processing.dbg: argument-processing.lisp package.lisp
 	echo "(require :cl-mw.examples.argument-processing) (use-package :cl-mw.examples.argument-processing) (mw-dump-exec :exec-name \"./argument-processing.dbg\")" | $(LISP)
