@@ -60,6 +60,18 @@
   #+sbcl sb-ext:*posix-argv*
   #+ccl ccl:*command-line-argument-list*)
 
+;; Compatibility macro needed for old-vs-new versions of IOLIB.
+;; In old versions of IOLIB, there was an accessor for sockets that
+;; let you set whether the socket was blocking or non-blocking.  This
+;; isn't needed and doesn't exist in the latest versions of IOLIB.
+(defun make-socket-non-blocking (socket)
+  (declare (ignorable socket))
+  (macrolet ((set-it ()
+               (let ((sym (find-symbol "FD-NON-BLOCKING" "IOLIB.STREAMS")))
+                 (when sym
+                   `(setf (,sym socket) t)))))
+    (set-it)))
+
 ;; Store open connection information into the open connections db
 ;; XXX figure out why equalp doesn't work with the key `(,who ,port)
 (defun save-open-connection (who port client)
@@ -518,7 +530,7 @@
           ;; XXX Not needed in new revision of IOLib, but I'm using an
           ;; older one from the git repository cause it doesn't have
           ;; bugs.
-          (setf (iolib.streams:fd-non-blocking client) t)
+          (make-socket-non-blocking client)
 
           ;; save the client's connection so we can close it later if need be
           (save-open-connection who port client)
@@ -1183,7 +1195,7 @@
                      ;; XXX Not needed in new revision of IOLib, but I'm
                      ;; using an older one from the git repository cause
                      ;; it doesn't have bugs.
-                     (setf (iolib.streams:fd-non-blocking master) t)
+                     (make-socket-non-blocking master)
 
                      (set-io-handler *event-base*
                                      (socket-os-fd master)
