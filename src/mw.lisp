@@ -1582,7 +1582,7 @@
                                       "--mw-master-port"
                                       ,(format nil "~A" master-port)))))
 
-                  (rename-file fname resource-file)
+                  (do-rename-file fname resource-file)
 
                   ;; Set the next update time.
                   (setf update-time (+ now resource-file-update-interval))))))))))

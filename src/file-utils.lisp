@@ -30,3 +30,9 @@
             (total 0 (+ total nread)))
            ((zerop nread) total)
         (write-sequence buffer fout :end nread)))))
+
+;; different lisp vendors do this operation differently. Yuck.
+(defun do-rename-file (source target)
+  (rename-file source target
+               #+clozure :if-exists
+               #+clozure :rename-and-delete))
